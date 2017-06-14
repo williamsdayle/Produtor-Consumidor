@@ -1,0 +1,52 @@
+#include<stdlib.h>
+#include<stdio.h>
+#include<pthread.h>
+#include<windows.h>
+int tamanho = 50;
+int senhas[50];
+int senhasLidas[50];
+int numSenha = 1;
+
+void *criarSenha ()
+{
+    int i;
+    for(i = 0; i < tamanho; i++, numSenha++)
+    {
+        senhas[i] = numSenha;
+        printf("Senha gereda: %d\n", senhas[i]);
+    }
+}
+
+void *lerSenha()
+{
+    int j;
+    for(j = 0; j < tamanho; )
+    {
+        if(senhas[j] != 0)
+        {
+            senhasLidas[j] = senhas[j];
+
+            printf("Senha lida: %d\n", senhasLidas[j]);
+            j++;
+        }
+
+    }
+}
+
+int main()
+{
+    int k;
+    for(k = 0; k < tamanho; k++)
+    {
+        senhas[k] = 0;
+    }
+    pthread_t criandoSenhas;
+    pthread_t lendoSenhas;
+
+    pthread_create(&criandoSenhas, NULL, criarSenha, NULL);
+    pthread_create(&lendoSenhas, NULL, lerSenha, NULL);
+
+    pthread_join(lendoSenhas, NULL);
+
+    return 1;
+}
